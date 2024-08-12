@@ -1,10 +1,11 @@
-import loguru
-
 from typing import List
 
+import loguru
+
 from db import connection_pool
-from entities.pull_requests import PullRequest
 from entities.contributors import Contributor
+from entities.pull_requests import PullRequest
+
 
 def create_pull_request(pull_request: PullRequest):
     loguru.logger.info(
@@ -70,25 +71,27 @@ def get_pull_requests(owner: str, repo: str) -> List[PullRequest]:
             results = cursor.fetchall()
             pull_requests = []
             for result in results:
-                pull_requests.append(PullRequest(
-                    id=result[0],
-                    owner=result[1],
-                    repo=result[2],
-                    number=result[3],
-                    title=result[4],
-                    url=result[5],
-                    merged_at=result[6],
-                    issue_url=result[7],
-                    contributor_id=result[8],
-                    contributor=Contributor(
-                        id=result[8],
-                        username=result[9],
-                        avatar=result[10],
-                        url=result[11],
-                        name=result[12],
-                        blog=result[13],
-                        location=result[14],
-                        twitter_username=result[15],
-                    ),
-                ))
+                pull_requests.append(
+                    PullRequest(
+                        id=result[0],
+                        owner=result[1],
+                        repo=result[2],
+                        number=result[3],
+                        title=result[4],
+                        url=result[5],
+                        merged_at=result[6],
+                        issue_url=result[7],
+                        contributor_id=result[8],
+                        contributor=Contributor(
+                            id=result[8],
+                            username=result[9],
+                            avatar=result[10],
+                            url=result[11],
+                            name=result[12],
+                            blog=result[13],
+                            location=result[14],
+                            twitter_username=result[15],
+                        ),
+                    )
+                )
             return pull_requests

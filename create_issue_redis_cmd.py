@@ -3,9 +3,9 @@ import sys
 
 import requests
 
-cmd = sys.argv[1]
-
 from config import GITHUB_TOKEN
+
+cmd = sys.argv[1]
 
 title = f"Add support for command `{cmd}`"
 body = f"""Add support for the `{cmd}` command in DiceDB similar to the [`{cmd}` command in Redis](https://redis.io/docs/latest/commands/command-list/). Please refer to the following commit in Redis to understand the implementation specifics - [source](https://github.com/redis/redis/tree/f60370ce28b946c1146dcea77c9c399d39601aaa).
