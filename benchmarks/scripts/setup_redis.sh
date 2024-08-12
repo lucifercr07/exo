@@ -1,8 +1,14 @@
 #!/bin/bash
+set -e
 
-git clone https://github.com/redis/redis/
+cd /home/ubuntu
+
+if [ ! -d "redis" ]; then
+    git clone https://github.com/redis/redis/
+fi
+
 cd redis
 git checkout 7.2.5
 make
-cd src
-nohup ./redis-server > /dev/null 2>&1 &
+
+cd /home/ubuntu
