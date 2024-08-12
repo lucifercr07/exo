@@ -18,3 +18,9 @@ export SERVICE=d
 cd benchmarks
 bash run_mt1.sh
 ```
+
+## Benchmarks
+
+Benchmarks are hosted on a Grafana instance, here are the dashboards
+
+- [Redis vs DiceDB Memtier Benchmarks](https://dicedb.grafana.net/public-dashboards/12cb13024353471db6750a53b6242aef)
