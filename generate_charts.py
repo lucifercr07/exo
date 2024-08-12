@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 import matplotlib.pyplot as plt
@@ -9,32 +10,43 @@ from db import connection_pool
 jinja_env = Environment(loader=FileSystemLoader("./templates"))
 
 
-def fetch_latency_data():
+def fetch_latency_data(database):
     with connection_pool.connection() as conn:
         with conn.cursor() as cursor:
             query = """
-                SELECT created_at, avg_latency, p50_latency, p99_latency, p99_9_latency
-                FROM benchmarks_mt
+                SELECT created_at, avg_latency, p50_latency, p99_latency, p99_9_latency, database, version
+                FROM benchmarks_mt WHERE database = %s
                 ORDER BY created_at;
             """
-            cursor.execute(query)
+            cursor.execute(query, (database,))
             data = cursor.fetchall()
 
             return data
 
 
-def plot_latency_data(data):
-    created_at = [row[0] for row in data]
-    avg_latency = [row[1] for row in data]
-    p50_latency = [row[2] for row in data]
-    p99_latency = [row[3] for row in data]
-    p99_9_latency = [row[4] for row in data]
+def plot_latency_data(redis_data, dicedb_data):
+    redis_created_at = [row[0] for row in redis_data]
+    redis_avg_latency = [row[1] for row in redis_data]
+    redis_p50_latency = [row[2] for row in redis_data]
+    redis_p99_latency = [row[3] for row in redis_data]
+    redis_p99_9_latency = [row[4] for row in redis_data]
+
+    dicedb_created_at = [row[0] for row in dicedb_data]
+    dicedb_avg_latency = [row[1] for row in dicedb_data]
+    dicedb_p50_latency = [row[2] for row in dicedb_data]
+    dicedb_p99_latency = [row[3] for row in dicedb_data]
+    dicedb_p99_9_latency = [row[4] for row in dicedb_data]
 
     fig, axs = plt.subplots(2, 2, figsize=(16, 9), tight_layout=True)
-    axs[0, 0].plot(created_at, avg_latency, label="Avg Latency")
-    axs[0, 1].plot(created_at, p50_latency, label="P50 Latency")
-    axs[1, 0].plot(created_at, p99_latency, label="P99 Latency")
-    axs[1, 1].plot(created_at, p99_9_latency, label="P99.9 Latency")
+    axs[0, 0].plot(redis_created_at, redis_avg_latency, label="Redis Avg Latency")
+    axs[0, 1].plot(redis_created_at, redis_p50_latency, label="Redis P50 Latency")
+    axs[1, 0].plot(redis_created_at, redis_p99_latency, label="Redis P99 Latency")
+    axs[1, 1].plot(redis_created_at, redis_p99_9_latency, label="Redis P99.9 Latency")
+
+    axs[0, 0].plot(dicedb_created_at, dicedb_avg_latency, label="DiceDB Avg Latency")
+    axs[0, 1].plot(dicedb_created_at, dicedb_p50_latency, label="DiceDB P50 Latency")
+    axs[1, 0].plot(dicedb_created_at, dicedb_p99_latency, label="DiceDB P99 Latency")
+    axs[1, 1].plot(dicedb_created_at, dicedb_p99_9_latency, label="DiceDB P99.9 Latency")
 
     axs[0, 0].set_xlabel("Created At")
     axs[0, 0].set_ylabel("Latency (ms)")
@@ -63,16 +75,19 @@ def plot_latency_data(data):
     return mpld3.fig_to_html(fig)
 
 
-def main():
-    data = fetch_latency_data()
+def main(dirpath):
+    redis_data = fetch_latency_data("redis")
+    dicedb_data = fetch_latency_data("dicedb")
     template = jinja_env.get_template("memtier.html")
     rendered_html = template.render(
-        mt1=plot_latency_data(data),
+        mt1=plot_latency_data(redis_data, dicedb_data),
         generated_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     )
-    with open("memtier.html", "w") as f:
+
+    filepath = os.path.join(dirpath, "memtier.html")
+    with open(filepath, "w") as f:
         f.write(rendered_html)
 
 
 if __name__ == "__main__":
-    main()
+    main("/home/arpit/dicedb/docs")
