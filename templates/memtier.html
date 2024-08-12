@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>DiceDB Memtier Benchmarks</title>
+        <link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    </head>
+    <body>
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item has-text-weight-bold" href="/">DiceDB Memtier Benchmarks</a>
+                <div class="navbar-menu">
+                    <div class="navbar-end">
+                        <p class="navbar-item is-size-7">Generated at {{ generated_at }}</p>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <br />
+        <section class="columns is-multiline">
+            <div class="column is-6">
+                <div>{{ mt1 }}</div>
+            </div>
+        </section>
+    </body>
+</html>
