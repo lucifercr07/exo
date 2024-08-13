@@ -19,3 +19,16 @@ cd dice
 /usr/local/go/bin/go build
 
 cd /home/ubuntu
+
+echo "[program:dicedb]
+command=/home/ubuntu/dice/dice
+autostart=false
+autorestart=false
+user=ubuntu
+directory=/home/ubuntu/dice
+stdout_logfile=/var/log/dicedb.log
+stderr_logfile=/var/log/dicedb_error.log" | sudo tee /etc/supervisor/conf.d/dicedb.conf
+
+sudo supervisorctl reread
+sudo supervisorctl update
+sudo supervisorctl stop dicedb

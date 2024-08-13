@@ -30,7 +30,11 @@ echo "instance public IP:" $INSTANCE_IP
 echo "waiting for instance to be in running state"
 aws ec2 wait instance-running --instance-ids $INSTANCE_ID
 
-sleep 5
+sleep 2
 
-echo "copying all the files to the instance"
-scp -o StrictHostKeyChecking=no -i $SSH_PEM_PATH -r scripts ubuntu@$INSTANCE_IP:/home/ubuntu
+ssh -o StrictHostKeyChecking=no -i $SSH_PEM_PATH ubuntu@$INSTANCE_IP "git clone https://github.com/DiceDB/exo 2>/dev/null || true"
+
+ssh -o StrictHostKeyChecking=no -i $SSH_PEM_PATH ubuntu@$INSTANCE_IP "/bin/bash /home/ubuntu/exo/benchmarks/scripts/setup_memtier.sh"
+ssh -o StrictHostKeyChecking=no -i $SSH_PEM_PATH ubuntu@$INSTANCE_IP "/bin/bash /home/ubuntu/exo/benchmarks/scripts/setup_redis.sh"
+ssh -o StrictHostKeyChecking=no -i $SSH_PEM_PATH ubuntu@$INSTANCE_IP "/bin/bash /home/ubuntu/exo/benchmarks/scripts/setup_dicedb.sh"
+ssh -o StrictHostKeyChecking=no -i $SSH_PEM_PATH ubuntu@$INSTANCE_IP "/bin/bash /home/ubuntu/exo/benchmarks/scripts/setup_mt1.sh"
