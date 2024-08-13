@@ -14,7 +14,7 @@ def fetch_latency_data(database):
     with connection_pool.connection() as conn:
         with conn.cursor() as cursor:
             query = """
-                SELECT created_at, avg_latency, p50_latency, p99_latency, p99_9_latency, database, version
+                SELECT created_at, avg_latency, p50_latency, p99_latency, p99_9_latency, type, database, version
                 FROM benchmarks_mt WHERE database = %s
                 ORDER BY created_at;
             """
@@ -25,28 +25,50 @@ def fetch_latency_data(database):
 
 
 def plot_latency_data(redis_data, dicedb_data):
-    redis_created_at = [row[0] for row in redis_data]
-    redis_avg_latency = [row[1] for row in redis_data]
-    redis_p50_latency = [row[2] for row in redis_data]
-    redis_p99_latency = [row[3] for row in redis_data]
-    redis_p99_9_latency = [row[4] for row in redis_data]
+    redis_g_created_at = [row[0] for row in redis_data if row[5] == "Gets"]
+    redis_g_avg_latency = [row[1] for row in redis_data if row[5] == "Gets"]
+    redis_g_p50_latency = [row[2] for row in redis_data if row[5] == "Gets"]
+    redis_g_p99_latency = [row[3] for row in redis_data if row[5] == "Gets"]
+    redis_g_p99_9_latency = [row[4] for row in redis_data if row[5] == "Gets"]
 
-    dicedb_created_at = [row[0] for row in dicedb_data]
-    dicedb_avg_latency = [row[1] for row in dicedb_data]
-    dicedb_p50_latency = [row[2] for row in dicedb_data]
-    dicedb_p99_latency = [row[3] for row in dicedb_data]
-    dicedb_p99_9_latency = [row[4] for row in dicedb_data]
+    dicedb_g_created_at = [row[0] for row in dicedb_data if row[5] == "Gets"]
+    dicedb_g_avg_latency = [row[1] for row in dicedb_data if row[5] == "Gets"]
+    dicedb_g_p50_latency = [row[2] for row in dicedb_data if row[5] == "Gets"]
+    dicedb_g_p99_latency = [row[3] for row in dicedb_data if row[5] == "Gets"]
+    dicedb_g_p99_9_latency = [row[4] for row in dicedb_data if row[5] == "Gets"]
+
+    redis_s_created_at = [row[0] for row in redis_data if row[5] == "Sets"]
+    redis_s_avg_latency = [row[1] for row in redis_data if row[5] == "Sets"]
+    redis_s_p50_latency = [row[2] for row in redis_data if row[5] == "Sets"]
+    redis_s_p99_latency = [row[3] for row in redis_data if row[5] == "Sets"]
+    redis_s_p99_9_latency = [row[4] for row in redis_data if row[5] == "Sets"]
+
+    dicedb_s_created_at = [row[0] for row in dicedb_data if row[5] == "Sets"]
+    dicedb_s_avg_latency = [row[1] for row in dicedb_data if row[5] == "Sets"]
+    dicedb_s_p50_latency = [row[2] for row in dicedb_data if row[5] == "Sets"]
+    dicedb_s_p99_latency = [row[3] for row in dicedb_data if row[5] == "Sets"]
+    dicedb_s_p99_9_latency = [row[4] for row in dicedb_data if row[5] == "Sets"]
 
     fig, axs = plt.subplots(2, 2, figsize=(16, 9), tight_layout=True)
-    axs[0, 0].plot(redis_created_at, redis_avg_latency, label="Redis Avg Latency")
-    axs[0, 1].plot(redis_created_at, redis_p50_latency, label="Redis P50 Latency")
-    axs[1, 0].plot(redis_created_at, redis_p99_latency, label="Redis P99 Latency")
-    axs[1, 1].plot(redis_created_at, redis_p99_9_latency, label="Redis P99.9 Latency")
+    axs[0, 0].plot(redis_g_created_at, redis_g_avg_latency, label="Redis Avg Latency - GET")
+    axs[0, 1].plot(redis_g_created_at, redis_g_p50_latency, label="Redis P50 Latency - GET")
+    axs[1, 0].plot(redis_g_created_at, redis_g_p99_latency, label="Redis P99 Latency - GET")
+    axs[1, 1].plot(redis_g_created_at, redis_g_p99_9_latency, label="Redis P99.9 Latency - GET")
 
-    axs[0, 0].plot(dicedb_created_at, dicedb_avg_latency, label="DiceDB Avg Latency")
-    axs[0, 1].plot(dicedb_created_at, dicedb_p50_latency, label="DiceDB P50 Latency")
-    axs[1, 0].plot(dicedb_created_at, dicedb_p99_latency, label="DiceDB P99 Latency")
-    axs[1, 1].plot(dicedb_created_at, dicedb_p99_9_latency, label="DiceDB P99.9 Latency")
+    axs[0, 0].plot(dicedb_g_created_at, dicedb_g_avg_latency, label="DiceDB Avg Latency - GET")
+    axs[0, 1].plot(dicedb_g_created_at, dicedb_g_p50_latency, label="DiceDB P50 Latency - GET")
+    axs[1, 0].plot(dicedb_g_created_at, dicedb_g_p99_latency, label="DiceDB P99 Latency - GET")
+    axs[1, 1].plot(dicedb_g_created_at, dicedb_g_p99_9_latency, label="DiceDB P99.9 Latency - GET")
+
+    axs[0, 0].plot(redis_s_created_at, redis_s_avg_latency, label="Redis Avg Latency - SET")
+    axs[0, 1].plot(redis_s_created_at, redis_s_p50_latency, label="Redis P50 Latency - SET")
+    axs[1, 0].plot(redis_s_created_at, redis_s_p99_latency, label="Redis P99 Latency - SET")
+    axs[1, 1].plot(redis_s_created_at, redis_s_p99_9_latency, label="Redis P99.9 Latency - SET")
+
+    axs[0, 0].plot(dicedb_s_created_at, dicedb_s_avg_latency, label="DiceDB Avg Latency - SET")
+    axs[0, 1].plot(dicedb_s_created_at, dicedb_s_p50_latency, label="DiceDB P50 Latency - SET")
+    axs[1, 0].plot(dicedb_s_created_at, dicedb_s_p99_latency, label="DiceDB P99 Latency - SET")
+    axs[1, 1].plot(dicedb_s_created_at, dicedb_s_p99_9_latency, label="DiceDB P99.9 Latency - SET")
 
     axs[0, 0].set_xlabel("Created At")
     axs[0, 0].set_ylabel("Latency (ms)")
@@ -90,4 +112,4 @@ def main(dirpath):
 
 
 if __name__ == "__main__":
-    main("/home/arpit/dicedb/docs")
+    main("/home/arpit/dicedb/docs/public/metrics")
