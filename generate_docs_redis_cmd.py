@@ -14,6 +14,7 @@ client = OpenAI()
 def generate_doc(command: str) -> str:
     completion = client.chat.completions.create(
         model="gpt-4o",
+        temperature=0.0,
         messages=[
             {
                 "role": "system",
