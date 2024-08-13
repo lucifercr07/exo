@@ -4,7 +4,7 @@ set -e
 cd /home/ubuntu
 
 echo "[program:mt1]
-command=/bin/bash /home/ubuntu/scripts/mt1.sh
+command=/bin/bash /home/ubuntu/exo/benchmarks/scripts/mt1.sh
 autostart=false
 autorestart=false
 user=ubuntu

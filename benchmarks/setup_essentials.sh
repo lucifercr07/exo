@@ -7,7 +7,7 @@ sudo apt install python3.12 python3.12-venv -y
 
 if [ ! -d "exo" ]; then
     git clone https://github.com/DiceDB/exo
-    echo "Setup .env file in /home/ubuntu/exo directory"
+    echo "Setup .env file in /home/ubuntu/exo directory and re-run the script"
     exit 1
 else
     cd exo

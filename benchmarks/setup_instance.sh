@@ -35,7 +35,6 @@ sleep 2
 scp -o StrictHostKeyChecking=no -i $SSH_PEM_PATH setup_essentials.sh ubuntu@$INSTANCE_IP:/home/ubuntu
 ssh -o StrictHostKeyChecking=no -i $SSH_PEM_PATH ubuntu@$INSTANCE_IP "/bin/bash /home/ubuntu/setup_essentials.sh"
 
-ssh -o StrictHostKeyChecking=no -i $SSH_PEM_PATH ubuntu@$INSTANCE_IP "/bin/bash /home/ubuntu/exo/benchmarks/scripts/setup_essentials.sh"
 ssh -o StrictHostKeyChecking=no -i $SSH_PEM_PATH ubuntu@$INSTANCE_IP "/bin/bash /home/ubuntu/exo/benchmarks/scripts/setup_memtier.sh"
 ssh -o StrictHostKeyChecking=no -i $SSH_PEM_PATH ubuntu@$INSTANCE_IP "/bin/bash /home/ubuntu/exo/benchmarks/scripts/setup_redis.sh"
 ssh -o StrictHostKeyChecking=no -i $SSH_PEM_PATH ubuntu@$INSTANCE_IP "/bin/bash /home/ubuntu/exo/benchmarks/scripts/setup_dicedb.sh"
