@@ -52,8 +52,8 @@ def main():
     with open(filepath, "w") as f:
         f.write(
             f"""---
-title: "{command}"
-description: "Documentation for the Redis command {command}"
+title: {command}
+description: Documentation for the Redis command {command}
 ---
 
 {doc}
