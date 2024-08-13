@@ -9,9 +9,12 @@ if [ ! -d "exo" ]; then
     git clone https://github.com/DiceDB/exo
     echo "Setup .env file in /home/ubuntu/exo directory"
     exit 1
+else
+    cd exo
+    git pull origin master
 fi
 
-cd exo
+cd /home/ubuntu/exo
 
 if [ ! -d "venv" ]; then
     python3.12 -m venv venv
