@@ -16,3 +16,5 @@ sudo supervisorctl stop dicedb
 cd /home/ubuntu/exo
 ./venv/bin/python ingest_mt_results.py manual redis 7.2.5 /home/ubuntu/mt1-redis.txt
 ./venv/bin/python ingest_mt_results.py manual dicedb 0.0.1 /home/ubuntu/mt1-dicedb.txt
+
+sudo shutdown -h now
