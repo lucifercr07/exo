@@ -22,17 +22,10 @@ def generate_title(description: str) -> str:
         temperature=0.0,
         messages=[
             {
-                "role": "system",
-                "content": """I want you to act as a title generator for GitHub issue based on description.
-                    
-                    I will provide you with the description of the issue in the markdown format,
-                    and you will generate one concise and relevant title ensuring that the meaning is maintained.
-                    The title should be short and to the point, and should not exceed 100 characters
-                """,
-            },
-            {
                 "role": "user",
-                "content": f"Here's the description of the issue:\n\n{description}",
+                "content": f"""Extract the core error or inconsistency and explain it in less than 80 characters without using the words DiceDB or Redis.
+                
+                {description}""",
             },
         ],
     )
@@ -49,40 +42,28 @@ def create_github_issue(
     }
 
     description = f"""
-I found that the command `{cmd}` is not consistent with Redis implementation and
-it behaves differently in DiceDB as compared to Redis. Here are the steps to reproduce the command
+The command `{cmd}` is not consistent with Redis implementation. Here are the steps to reproduce the issue
 
 ```
 {steps_to_reproduce}
 ```
 
-Here's the output I observe in Redis v7.2.5
+Here's the output I observed in Redis v7.2.5
 
 ```
 {redis_output}
 ```
 
-and here's the output I observe in DiceDB latest version of `master` branch
+and here's the output I observed in DiceDB's latest commit of the `master` branch
 
 ```
 {dicedb_output}
 ```
 
-We need to look into the issue and fix the command and make it consistent with the Redis implementation.
-Make sure you are using Redis version 7.2.5 as a reference for the command implementation.
-To setup Redis v7.2.5 from source, you can run the following commands in your Ubuntu/Mac/WSL environment
-
-```sh
-git clone https://github.com/redis/redis/
-cd redis
-git checkout 7.2.5
-make
-cd src
-./redis-server
-```
-
-Once you have the Redis server running, you can test the command using the steps mentioned above and compare the output with DiceDB.
-To setup DiceDB locally please follow the steps mentioned under [Setting up DiceDB from source for development and contributions](https://github.com/DiceDB/dice/blob/master/README.md#setting-up-dicedb-from-source-for-development-and-contributions) section of README.md file of the repository.
+Make the implementation consistent with the Redis implementation.
+Make sure you are using Redis version 7.2.5 as a reference for the
+command implementation and to setup Redis from source,
+you can follow [these instructions](https://gist.github.com/arpitbbhayani/94aedf279349303ed7394197976b6843).
 """
     description = mdformat.text(description)
     title = generate_title(description)
