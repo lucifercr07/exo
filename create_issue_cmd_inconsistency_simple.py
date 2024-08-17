@@ -33,39 +33,39 @@ def generate_title(description: str) -> str:
     return completion.choices[0].message.content
 
 
-def create_github_issue(
-    cmd: str, steps_to_reproduce: str, redis_output: str, dicedb_output: str
-):
+def create_github_issue(cmd: str,):
     headers = {
         "Authorization": f"token {GITHUB_TOKEN}",
         "Accept": "application/vnd.github.v3+json",
     }
 
     description = f"""
-The command `{cmd}` is not consistent with Redis implementation. Here are the steps to reproduce the issue
+This issue is all about ensuring we are as close to Redis as possible. The command in focus for this issue is `{cmd}`.
 
-```
-{steps_to_reproduce}
-```
+Go through the [official documentation](https://redis.io/docs/latest/commands) of the command `{cmd}` on Redis and identify the inconsistencies. The inconsistencies could be in
 
-Here's the output I observed in Redis v7.2.5
+1. unhandled edge case
+2. unexpected behavior
+3. unsupported option
 
-```
-{redis_output}
-```
+Because we are trying to be compatible with Redis v7.2.5, I would recommend you try out different variants of the command with different inputs on that specific version. The instructions on running Redis v7.2.5 locally
 
-and here's the output I observed in DiceDB's latest commit of the `master` branch
+- [from source code](https://gist.github.com/arpitbbhayani/94aedf279349303ed7394197976b6843)
+- [use Docker](https://hub.docker.com/_/redis)
 
-```
-{dicedb_output}
-```
+Once you find the discrepancy, you can either
 
-Make the implementation consistent with the Redis implementation.
-Make sure you are using Redis version 7.2.5 as a reference for the
-command implementation and to setup Redis
+1. raise an issue on [Dice repository](https://github.com/dicedb/dice) with details, or
+2. try to fix it yourself and raise a PR
 
-- [from source code](https://gist.github.com/arpitbbhayani/94aedf279349303ed7394197976b6843), or
-- [use Docker](https://hub.docker.com/_/redis).
+If you are [raising the issue](https://github.com/DiceDB/dice/issues/new?assignees=&labels=&projects=&template=inconsistent_dicedb_vs_redis.md&title=Inconsistent+%60%7BCMD%7D%60%3A+%3CDescribe+the+error+in+one+concise+line%3E), make sure you provide the details such as
+
+0. [use the template](https://github.com/DiceDB/dice/issues/new?assignees=&labels=&projects=&template=inconsistent_dicedb_vs_redis.md&title=Inconsistent+%60%7BCMD%7D%60%3A+%3CDescribe+the+error+in+one+concise+line%3E) and provide the following details
+1. steps to reproduce (series of commands)
+2. observed output on DiceDB
+3. observed output on Redis v7.2.5
+
+Also, feel free to update the documentation and raise the PR in the [docs repository](https://github.com/dicedb/docs).
 """
     description = mdformat.text(description)
     title = generate_title(description)
@@ -100,14 +100,4 @@ def multiline_input() -> str:
 
 if __name__ == "__main__":
     command = input("Enter the command that is inconsistent:")
-
-    print("Enter the commands in order to reproduce the issue:")
-    steps_to_reproduce = multiline_input()
-
-    print("Enter the output you observe in Redis:")
-    redis_output = multiline_input()
-
-    print("Enter the output you observe in DiceDB:")
-    dicedb_output = multiline_input()
-
-    create_github_issue(command, steps_to_reproduce, redis_output, dicedb_output)
+    create_github_issue(command)
