@@ -38,8 +38,7 @@ If you are [raising the issue](https://github.com/DiceDB/dice/issues/new?assigne
 
 Also, feel free to update the documentation and raise the PR in the [docs repository](https://github.com/dicedb/docs).
 
-> You will need to go deeper into the command make sure you are covering all cases and reporting the inconsistencies or fixing them.
-> The deeper the work, the better our stability will be.
+> You will need to go deeper into the command make sure you are covering all cases and reporting the inconsistencies or fixing them. The deeper the work, the better our stability will be. Also, it is possible that we do not find any discrepencies, so please mention the same in the comment of this issue. Mention the PR or issue links that you create under this issue.
 """
     description = mdformat.text(description)
     title = f"Report inconsistency in the command `{cmd}`"
