@@ -1,37 +1,8 @@
 # pylint: disable=line-too-long
-import os
-import sys
-
 import mdformat
 import requests
-from openai import OpenAI
 
 from config import GITHUB_TOKEN
-
-if os.environ.get("OPENAI_API_KEY") is None:
-    print("Please set the OPENAI_API_KEY environment variable.")
-    sys.exit(1)
-
-
-client = OpenAI()
-
-
-def generate_title(description: str) -> str:
-    completion = client.chat.completions.create(
-        model="gpt-4o",
-        temperature=0.0,
-        messages=[
-            {
-                "role": "user",
-                "content": f"""Extract the core error or inconsistency and explain it in less than 80 characters without using the words DiceDB or Redis.
-                
-                {description}""",
-            },
-        ],
-    )
-
-    return completion.choices[0].message.content
-
 
 def create_github_issue(cmd: str,):
     headers = {
@@ -66,9 +37,12 @@ If you are [raising the issue](https://github.com/DiceDB/dice/issues/new?assigne
 3. observed output on Redis v7.2.5
 
 Also, feel free to update the documentation and raise the PR in the [docs repository](https://github.com/dicedb/docs).
+
+> You will need to go deeper into the command make sure you are covering all cases and reporting the inconsistencies or fixing them.
+> The deeper the work, the better our stability will be.
 """
     description = mdformat.text(description)
-    title = generate_title(description)
+    title = f"Report inconsistency in the command `{cmd}`"
 
     data = {"title": title, "body": description}
 
